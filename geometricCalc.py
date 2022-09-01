@@ -1,8 +1,49 @@
+# Import math Library
+import math
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QPainter, QBrush, QPen
 from PyQt5.QtCore import Qt
 import sys
+
+# Return the sine of different values
+# Diameter circles
+dMain = 500
+dSmall = 60
+
+# Angle main circles
+spanAngleMain = 260
+spanAngleLeft = 120
+
+# Calculation postion and start angle
+xyPosMain = 400 - (dMain / 2)
+calcAngleMain = (360 - spanAngleMain) / 2
+startAngleMain = calcAngleMain - 90
+
+# calculation enpoints and slopes 
+GMain = math.sin(math.radians(calcAngleMain)) * (dMain/2)
+AMain = math.cos(math.radians(calcAngleMain)) * (dMain/2)
+
+GLeft = math.sin(math.radians(calcAngleMain)) * (dSmall/2)
+ALeft = math.cos(math.radians(calcAngleMain)) * (dSmall/2)
+
+xPosLeft = 400 - GMain - GLeft - (dSmall/2)
+yPosLeft = 400 + AMain + (ALeft - dSmall/2)
+
+
+GEndLeft = math.sin(math.radians(startAngleMain)) * (dSmall/2)
+AEndLeft = math.cos(math.radians(startAngleMain)) * (dSmall/2)
+
+startAngleLeft = 90 - calcAngleMain
+
+xPosLineStart = 400 - GMain - GLeft - GEndLeft
+yPosLineStart = 400 + AMain + ALeft + AEndLeft
+
+GEnd = math.sin(math.radians(startAngleMain)) * (dSmall/2)
+AEndLeft = math.cos(math.radians(startAngleMain)) * (dSmall/2)
+
+xPosLineEnd = 0
+yPosLineEnd = yPosLineStart + xPosLineStart * (AEndLeft/GEndLeft)
 
 class Window(QMainWindow):
     def __init__(self):
@@ -32,19 +73,19 @@ class Window(QMainWindow):
         innerCircle.setRenderHint(QPainter.Antialiasing)
         innerCircle.setPen(Qt.white)
         innerCircle.setBrush(Qt.white)
-        innerCircle.drawArc(150, 150, 500, 500, 320 * 16, 260*16)
+        innerCircle.drawArc(int(xyPosMain), int(xyPosMain), int(dMain), int(dMain), int(startAngleMain) * 16, int(spanAngleMain) * 16)
         leftCircle = QPainter()
         leftCircle.begin(self)
         leftCircle.setRenderHint(QPainter.Antialiasing)
         leftCircle.setPen(Qt.white)
         leftCircle.setBrush(Qt.white)
-        leftCircle.drawArc(159, 555, 60, 60, 290 * 16, 120 * 16)
+        leftCircle.drawArc(int(xPosLeft), int(yPosLeft), int(dSmall), int(dSmall), int(startAngleLeft) * 16, int(-spanAngleLeft) * 16)
         leftLine = QPainter()
         leftLine.begin(self)
         leftLine.setRenderHint(QPainter.Antialiasing)
         leftLine.setPen(Qt.white)
         leftLine.setBrush(Qt.white)
-        leftLine.drawLine(200, 553+60, 0, 700)
+        leftLine.drawLine(int(xPosLineStart), int(yPosLineStart), int(xPosLineEnd), int(yPosLineEnd))
         rightCircle = QPainter()
         rightCircle.begin(self)
         rightCircle.setRenderHint(QPainter.Antialiasing)
