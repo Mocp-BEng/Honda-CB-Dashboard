@@ -1,17 +1,60 @@
-from PyQt5 import QtGui
+# Import math Library
+import math
 from PyQt5.QtWidgets import QApplication, QMainWindow
-from PyQt5.QtGui import QPainter, QBrush, QPen
+from PyQt5.QtGui import QPainter, QPen
 from PyQt5.QtCore import Qt
 import sys
+import plotly.graph_objects as go
+
+## Parameter 
+# Windows size 
+WindowSize = 800
+
+# Line thickness 
+arcwidth = 5
+
+# Diameter circles
+dMain = 500
+rMain = dMain / 2
+
+dSmall = 60
+rSmall = dSmall / 2
+
+# Angle main circles
+spanAngleMain = math.radians(240)
+spanAngleSmall = math.radians(90)
+
+xyPosMain = 400 - rMain
+calcAngleMain = (math.radians(360) - spanAngleMain) / 2
+
+alpha = (spanAngleMain - math.radians(180)) / 2
+beta = alpha - spanAngleSmall
+
+lengthC = math.sin(alpha) * rMain
+lengthD = math.cos(alpha) * rMain
+lengthE = math.sin(alpha) * rSmall
+lengthF = math.cos(alpha) * rSmall
+lengthG = math.sin(math.radians(90) - beta) * rSmall
+lengthH = math.cos(math.radians(90) - beta) * rSmall
+
+xSmallCircle = xyPosMain + rMain - lengthD - lengthF - rSmall
+ySmallCircle = xyPosMain + rMain + lengthC + lengthE - rSmall
+
+xLineStart = xSmallCircle + rSmall + lengthG
+yLineStart = ySmallCircle + rSmall - lengthH
+
+xLineEnd = 0
+yLineEnd = yLineStart + math.sin(math.radians(90) - beta) * xLineStart 
+offset = 0.0
 
 class Window(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.title = "PyQt5 Drawing Tutorial"
-        self.top= 150
-        self.left= 150
-        self.width = 800
-        self.height = 800
+        self.title = "Honda 200e Dashboard"
+        self.top= 0
+        self.left= 0
+        self.width = WindowSize
+        self.height = WindowSize
         self.setStyleSheet("background-color: black;")
         self.InitWindow()
 
@@ -21,43 +64,42 @@ class Window(QMainWindow):
         self.show()
     
     def paintEvent(self, event):
+        frameCircle = QPainter()
+        frameCircle.begin(self)
+        frameCircle.setPen(Qt.red)
+        frameCircle.setBrush(Qt.red)
+        frameCircle.drawArc(0, 0, WindowSize, WindowSize, 0, 360 * 16)
+        
         mainCircle = QPainter()
         mainCircle.begin(self)
-        mainCircle.setRenderHint(QPainter.Antialiasing)
-        mainCircle.setPen(Qt.red)
-        mainCircle.setBrush(Qt.red)
-        mainCircle.drawArc(0, 0, 800, 800, 0 * 16, 360 * 16)
-        innerCircle = QPainter()
-        innerCircle.begin(self)
-        innerCircle.setRenderHint(QPainter.Antialiasing)
-        innerCircle.setPen(Qt.white)
-        innerCircle.setBrush(Qt.white)
-        innerCircle.drawArc(150, 150, 500, 500, 320 * 16, 260*16)
-        leftCircle = QPainter()
-        leftCircle.begin(self)
-        leftCircle.setRenderHint(QPainter.Antialiasing)
-        leftCircle.setPen(Qt.white)
-        leftCircle.setBrush(Qt.white)
-        leftCircle.drawArc(159, 555, 60, 60, 290 * 16, 120 * 16)
+        mainCircle.setPen(QPen(Qt.white, arcwidth, cap=Qt.FlatCap))
+        mainCircle.setBrush(Qt.white)
+        mainCircle.drawArc(int(xyPosMain), int(xyPosMain), int(dMain), int(dMain), int(math.degrees(-alpha)) * 16, int(math.degrees(spanAngleMain)) * 16)
+        
+        leftSmallCircle = QPainter()
+        leftSmallCircle.begin(self)
+        leftSmallCircle.setPen(QPen(Qt.white, arcwidth, cap=Qt.FlatCap))
+        leftSmallCircle.setBrush(Qt.white)
+        leftSmallCircle.drawArc(int(xSmallCircle), int(ySmallCircle), int(dSmall), int(dSmall), int(math.degrees(beta)) * 16, int(math.degrees(spanAngleSmall)) * 16)
+        
+        rightSmallCircle = QPainter()
+        rightSmallCircle.begin(self)
+        rightSmallCircle.setPen(QPen(Qt.white, arcwidth, cap=Qt.FlatCap))
+        rightSmallCircle.setBrush(Qt.white)
+        rightSmallCircle.drawArc(int(WindowSize - xSmallCircle - 2 * rSmall), int(ySmallCircle), int(dSmall), int(dSmall), int(180 - math.degrees(beta)) * 16, int(-math.degrees(spanAngleSmall)) * 16)
+        
         leftLine = QPainter()
         leftLine.begin(self)
-        leftLine.setRenderHint(QPainter.Antialiasing)
-        leftLine.setPen(Qt.white)
+        leftLine.setPen(QPen(Qt.white, arcwidth, cap=Qt.FlatCap))
         leftLine.setBrush(Qt.white)
-        leftLine.drawLine(200, 553+60, 0, 700)
-        rightCircle = QPainter()
-        rightCircle.begin(self)
-        rightCircle.setRenderHint(QPainter.Antialiasing)
-        rightCircle.setPen(Qt.white)
-        rightCircle.setBrush(Qt.white)
-        rightCircle.drawArc(800-195-30, 589, 30, 30, 120 * 16, 120 * 16)
+        leftLine.drawLine(int(xLineStart+offset), int(yLineStart + offset), int(xLineEnd + offset), int(yLineEnd+offset))
+        
         rightLine = QPainter()
         rightLine.begin(self)
-        rightLine.setRenderHint(QPainter.Antialiasing)
-        rightLine.setPen(Qt.white)
+        rightLine.setPen(QPen(Qt.white, arcwidth, cap=Qt.FlatCap))
         rightLine.setBrush(Qt.white)
-        rightLine.drawLine(800-195, 589+30, 800, 700)
-    
+        rightLine.drawLine(int(WindowSize-xLineStart), int(yLineStart+offset), int(WindowSize), int(yLineEnd+offset))
+        
 
 App = QApplication(sys.argv)
 window = Window()
