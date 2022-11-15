@@ -61,7 +61,7 @@ class Window(QMainWindow):
         rightLine.drawLine(int(self.circle_parameters.WindowSize - self.circle_parameters.offset), int(self.circle_parameters.yLineEnd + self.circle_parameters.offset), 
         int(self.circle_parameters.WindowSize - self.circle_parameters.xLineStart), int(self.circle_parameters.yLineStart + self.circle_parameters.offset)) 
 
-        CircularGauge(self, self.can_data)   
+        CircularGauge(self, self.can_data, self.circle_parameters)   
 
     def paintEvent(self, event):
         frameCircle = QPainter()

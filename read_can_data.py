@@ -6,7 +6,7 @@ class CanValues:
     
 def readCanData():
     # To-Do read values from can 
-    MotorCurrent = 444.4 # [A]
+    MotorCurrent = 222.2 # [A]
 
     return CanValues(
     MotorCurrent,
