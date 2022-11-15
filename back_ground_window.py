@@ -3,8 +3,10 @@ from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtGui import QPainter, QPen
 from PyQt5.QtCore import Qt
 from circle_parameters import calculateCircleParameters
+from read_can_data import readCanData
+from circular_gauge import CircularGauge
 
-class BackGroundWindow(QMainWindow):
+class Window(QMainWindow):
     def __init__(self):
         super().__init__()
         self.title = "Honda 200e Dashboard"
@@ -12,6 +14,7 @@ class BackGroundWindow(QMainWindow):
         self.left= 0
         self.setStyleSheet("background-color: black;")
         self.circle_parameters = calculateCircleParameters()
+        self.can_data = readCanData()
         self.width = self.circle_parameters.WindowSize
         self.height = self.circle_parameters.WindowSize
         self.InitWindow()
@@ -56,7 +59,9 @@ class BackGroundWindow(QMainWindow):
         rightLine.setPen(QPen(Qt.white, self.circle_parameters.arcwidth, cap=Qt.FlatCap))
         rightLine.setBrush(Qt.white)
         rightLine.drawLine(int(self.circle_parameters.WindowSize - self.circle_parameters.offset), int(self.circle_parameters.yLineEnd + self.circle_parameters.offset), 
-        int(self.circle_parameters.WindowSize - self.circle_parameters.xLineStart), int(self.circle_parameters.yLineStart + self.circle_parameters.offset))    
+        int(self.circle_parameters.WindowSize - self.circle_parameters.xLineStart), int(self.circle_parameters.yLineStart + self.circle_parameters.offset)) 
+
+        CircularGauge(self, self.can_data)   
 
     def paintEvent(self, event):
         frameCircle = QPainter()
