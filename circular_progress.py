@@ -96,9 +96,6 @@ class CircularProgress(QWidget):
         paint.setPen(pen)
         paint.drawText(rect, Qt.AlignCenter, f"{self.value}{self.suffix}")
 
-        
-
-
         # END
         paint.end()
 
