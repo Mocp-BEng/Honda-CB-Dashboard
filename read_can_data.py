@@ -10,7 +10,7 @@ def readCanData():
     # To-Do read values from can 
     MotorCurrent = 200 # [A]
     MotorRpm = 5000 # [1/min]
-    Charging = True 
+    Charging = False 
 
     return CanValues(
     MotorCurrent,

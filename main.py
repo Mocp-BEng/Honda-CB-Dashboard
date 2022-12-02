@@ -11,7 +11,7 @@ from PyQt5 import QtWidgets
 
 # Import Functions
 from circle_parameters import calculateCircleParameters
-from charging_gif import chargingGif
+from charging_mode import chargingMode
 from read_can_data import readCanData
 
 can_data = readCanData()
@@ -20,9 +20,10 @@ App = QApplication(sys.argv)
 window = Window()
 
 if can_data.Charging == True:
-    ui = chargingGif()
-    ui.setupUi(window)
+    chargerWindow = chargingMode()
+    chargerWindow.setupChargingMode(window)
     window.show()
+
 
 
 sys.exit(App.exec())
