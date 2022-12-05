@@ -10,11 +10,15 @@ from PyQt5 import QtCore
 # Import Functions
 from circle_parameters import calculateCircleParameters
 from read_can_data import readCanData
-from circular_gauge import circularGauge
+from circular_gauge import circularGauge 
 from blinker_left import blinkerLeft, blinkerRight
 from paint_background import paintBackground
 from static_label import staticLabel
 # from charging_gif import chargingGif
+
+# Global test variables
+counter_rpm = 0
+counter_A = 0
 
 class Window(QMainWindow):
     def __init__(self):
@@ -27,16 +31,46 @@ class Window(QMainWindow):
         self.can_data = readCanData()
         self.width = self.circle_parameters.WindowSize
         self.height = self.circle_parameters.WindowSize
-        # self.label_1 = QLabel('30', self)
-        # self.label_1.move(300, 300)
-        # self.label_1.setStyleSheet("background-color : none; color : white; font:12pt Arial")
+        staticLabel(self)
+        
+        # QTIMER
+        self.timerrpm = QTimer()
+        self.timerrpm.timeout.connect(self.updaterpm)
+        self.timerrpm.start(1)
+
+        # QTIMER
+        self.timerA = QTimer()
+        self.timerA.timeout.connect(self.updateA)
+        self.timerA.start(25)
+
         self.show() 
         self.InitWindow()
+
+    # UPDATE PROGRESS BAR 
+    def updaterpm(self):
+        # SET VALUE TO PROGRESS BAR
+        self.can_data.setMotorRpm(counter_rpm)
+        # CLOSE SPLASH SCREEN AND OPEN MAIN APP
+        if self.can_data.MotorRpm >= 6000:
+            # STOP TIMER
+            self.can_data.MotorRpm = 0
+        # INCRESE COUNTER
+        self.can_data.MotorRpm += 1
+
+    # UPDATE PROGRESS BAR 
+    def updateA(self):
+        # SET VALUE TO PROGRESS BAR
+        self.can_data.setMotorCurrent(counter_A)
+        # CLOSE SPLASH SCREEN AND OPEN MAIN APP
+        if self.can_data.MotorCurrent >= 350:
+            # STOP TIMER
+            self.can_data.MotorCurrent = 0
+        # INCRESE COUNTER
+        self.can_data.MotorCurrent += 1
 
     def InitWindow(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.top, self.left, self.width, self.height)
-        staticLabel(self, self.circle_parameters)
         self.show()                 
 
     def paintEvent(self, event):
@@ -50,54 +84,15 @@ class Window(QMainWindow):
             #####
             
             paintBackground(self, self.circle_parameters)
-            circularGauge(self, self.can_data, self.circle_parameters)
-            # staticLabel(self, self.circle_parameters)
+            self.progressBar = circularGauge()
+            self.progressBar.circularProgressBar(self, self.can_data, self.circle_parameters)
 
-            # creating a vertical layout
-            layout = QVBoxLayout()
-    
-            # creating font object
-            font = QFont('Arial', 120, QFont.Bold)
-    
-            # creating a label object
-            self.label = QLabel()
-    
-            # setting centre alignment to the label
-            self.label.setAlignment(Qt.AlignCenter)
-    
-            # setting font to the label
-            self.label.setFont(font)
-    
-            # adding label to the layout
-            layout.addWidget(self.label)
-    
-            # setting the layout to main window
-            self.setLayout(layout)
-    
-            # creating a timer object
-            timer = QTimer(self)
-    
-            # adding action to timer
-            timer.timeout.connect(self.showTime)
-    
-            # update the timer every second
-            timer.start(1000)
+            # staticLabel(self, self.circle_parameters)
 
             # #Blinker
             blinkerLeft(self, self.circle_parameters) 
             blinkerRight(self, self.circle_parameters)
-
             self.show() 
     
-    # method called by timer
-    def showTime(self):
- 
-        # getting current time
-        current_time = QTime.currentTime()
- 
-        # converting QTime object to string
-        label_time = current_time.toString('hh:mm:ss')
- 
-        # showing it to the label
-        self.label.setText(label_time)
-        https://www.geeksforgeeks.org/pyqt5-create-a-digital-clock/
+
+        # https://www.geeksforgeeks.org/pyqt5-create-a-digital-clock/

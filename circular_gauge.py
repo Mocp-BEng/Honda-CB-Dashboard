@@ -6,17 +6,18 @@ from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtGui import QPainter, QPen, QConicalGradient
 from PyQt5.QtCore import *
 
-
-## Scaling
-maxAngle = 90
-arcWidth = 150
-startAngle = 28
-maxAmp = 400
-maxRpm = 7000
-amp2deg = maxAngle / maxAmp
-rpm2deg = maxAngle / maxRpm
-
-def circularGauge(self, CanValues, circlePar):
+class circularGauge():
+    def __init__(self):
+        ## Scaling
+        maxAngle = 90
+        arcWidth = 150
+        startAngle = 28
+        maxAmp = 400
+        maxRpm = 7000
+        amp2deg = maxAngle / maxAmp
+        rpm2deg = maxAngle / maxRpm
+        
+    def circularProgressBar(self, CanValues, circlePar):
         # Arc background
         ampArcBg = QPainter()
         ampArcBg.begin(self)
@@ -46,3 +47,13 @@ def circularGauge(self, CanValues, circlePar):
         rpmArc.setPen(QPen(Qt.red, arcWidth, cap=Qt.FlatCap))
         rpmArc.drawArc(int(arcWidth/2), int(arcWidth/2), int(self.circle_parameters.WindowSize-arcWidth), int(self.circle_parameters.WindowSize-arcWidth), 
         int(-startAngle) * 16, int(CanValues.MotorRpm * rpm2deg) * 16)
+
+        # SET VALUE
+    def setMotorRpm(self, rpm):
+        self.rpm = rpm
+        self.repaint()# Render progress bar after change value
+
+    # SET VALUE
+    def setMotorCurrent(self, A):
+        self.A = A
+        self.repaint()# Render progress bar after change value

@@ -22,7 +22,6 @@ class CircularProgress(QWidget):
         #BG
         self.enable_bg = True
         self.bg_color = 0x44475a
-    
 
         # SET DEFAULT SIZE WITHOUT LAYOUT
         self.resize(self.width, self.height)

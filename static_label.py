@@ -2,13 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import * 
 import sys
 
-def staticLabel(self, circlePar):
-    # creating a label widget
-    # by default label will display at top left corner
-    self.label_1 = QLabel('Arial font', self)
-  
-    # moving position
+def staticLabel(self):
+    self.label_1 = QLabel('30', self)
     self.label_1.move(300, 300)
-  
-    # setting font and size
-    self.label_1.setFont(QFont('Arial', 10))
+    self.label_1.setStyleSheet("background-color : none; color : white; font:28pt Arial")
