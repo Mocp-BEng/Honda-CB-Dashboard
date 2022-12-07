@@ -31,42 +31,42 @@ class Window(QMainWindow):
         self.can_data = readCanData()
         self.width = self.circle_parameters.WindowSize
         self.height = self.circle_parameters.WindowSize
-        staticLabel(self)
+        # staticLabel(self)
         
-        # QTIMER
-        self.timerrpm = QTimer()
-        self.timerrpm.timeout.connect(self.updaterpm)
-        self.timerrpm.start(1)
+        # # QTIMER
+        # self.timerrpm = QTimer()
+        # self.timerrpm.timeout.connect(self.updaterpm)
+        # self.timerrpm.start(1)
 
-        # QTIMER
-        self.timerA = QTimer()
-        self.timerA.timeout.connect(self.updateA)
-        self.timerA.start(25)
+        # # QTIMER
+        # self.timerA = QTimer()
+        # self.timerA.timeout.connect(self.updateA)
+        # self.timerA.start(25)
 
         self.show() 
         self.InitWindow()
 
-    # UPDATE PROGRESS BAR 
-    def updaterpm(self):
-        # SET VALUE TO PROGRESS BAR
-        self.can_data.setMotorRpm(counter_rpm)
-        # CLOSE SPLASH SCREEN AND OPEN MAIN APP
-        if self.can_data.MotorRpm >= 6000:
-            # STOP TIMER
-            self.can_data.MotorRpm = 0
-        # INCRESE COUNTER
-        self.can_data.MotorRpm += 1
+    # # UPDATE PROGRESS BAR 
+    # def updaterpm(self):
+    #     # SET VALUE TO PROGRESS BAR
+    #     self.can_data.setMotorRpm(counter_rpm)
+    #     # CLOSE SPLASH SCREEN AND OPEN MAIN APP
+    #     if self.can_data.MotorRpm >= 6000:
+    #         # STOP TIMER
+    #         self.can_data.MotorRpm = 0
+    #     # INCRESE COUNTER
+    #     self.can_data.MotorRpm += 1
 
-    # UPDATE PROGRESS BAR 
-    def updateA(self):
-        # SET VALUE TO PROGRESS BAR
-        self.can_data.setMotorCurrent(counter_A)
-        # CLOSE SPLASH SCREEN AND OPEN MAIN APP
-        if self.can_data.MotorCurrent >= 350:
-            # STOP TIMER
-            self.can_data.MotorCurrent = 0
-        # INCRESE COUNTER
-        self.can_data.MotorCurrent += 1
+    # # UPDATE PROGRESS BAR 
+    # def updateA(self):
+    #     # SET VALUE TO PROGRESS BAR
+    #     self.can_data.setMotorCurrent(counter_A)
+    #     # CLOSE SPLASH SCREEN AND OPEN MAIN APP
+    #     if self.can_data.MotorCurrent >= 350:
+    #         # STOP TIMER
+    #         self.can_data.MotorCurrent = 0
+    #     # INCRESE COUNTER
+    #     self.can_data.MotorCurrent += 1
 
     def InitWindow(self):
         self.setWindowTitle(self.title)
@@ -84,8 +84,7 @@ class Window(QMainWindow):
             #####
             
             paintBackground(self, self.circle_parameters)
-            self.progressBar = circularGauge()
-            self.progressBar.circularProgressBar(self, self.can_data, self.circle_parameters)
+            circularGauge(self, self.can_data, self.circle_parameters)
 
             # staticLabel(self, self.circle_parameters)
 
